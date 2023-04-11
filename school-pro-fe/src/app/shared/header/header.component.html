@@ -1,0 +1,143 @@
+<div class="main-container">
+  <nav class="navbar navbar-expand-lg navbar-dark " style="background-color:#cacaca; border: 2px solid black;">
+
+    <div class="container-fluid">
+      <div class="dropdown" *ngIf="isAuthenticated" routerLinkActive="active-link">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Select an option
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <ul>
+
+
+            <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/home">
+              <span>
+                <h5>Home</h5>
+              </span>
+            </a>
+
+         
+
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/subject">
+                <span>Subject</span>
+              </a>
+            </li>
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/exam-period">
+
+                <span>Exam-period</span>
+              </a>
+            </li>
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/city">
+
+                <span>City</span>
+              </a>
+            </li>
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/exam">
+                <span>Exam</span>
+              </a>
+            </li>
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/grade">
+                <span>Grades</span>
+              </a>
+            </li>
+            <li> <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/literature">
+                <span>Literature</span>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/profesor">
+                <span>Profesor</span>
+              </a>
+            </li>
+            <li>
+              <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/student">
+                <span>Student</span>
+              </a>
+            </li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+    <a *ngIf="isAuthenticated" routerLinkActive="active-link" routerLink="/home">
+      <span><strong>Home</strong></span>
+    </a>
+    <div class="logo">
+      <img src="/assets/img/sms.png" alt="SMS" width="100" height="70">
+
+
+    </div>
+
+
+
+    <!-- <a
+       *ngIf="isAuthenticated"
+       routerLinkActive="active-link"
+       routerLink="/profesor"
+     >
+       <span>Profesor</span>
+     </a> -->
+
+    <!-- <a
+     *ngIf="isAuthenticated"
+     routerLinkActive="active-link"
+     routerLink="/subject"
+    >
+      <span>Subject</span>
+    </a>
+    <a
+       *ngIf="isAuthenticated"
+       routerLinkActive="active-link"
+       routerLink="/exam-period"
+     > 
+     
+     <span>Exam-period</span>
+   </a>
+     <a 
+     *ngIf="isAuthenticated"
+      routerLinkActive="active-link"
+      routerLink="/city">
+
+        <span>City</span>
+     </a>
+      <a
+       *ngIf="isAuthenticated"
+       routerLinkActive="active-link"
+       routerLink="/exam"
+     >
+       <span>Exam</span>
+     </a>
+      <a
+       *ngIf="isAuthenticated"
+       routerLinkActive="active-link"
+       routerLink="/grade"
+     >
+       <span>Grades</span>
+     </a>
+      <a
+       *ngIf="isAuthenticated"
+       routerLinkActive="active-link"
+       routerLink="/literature"
+     >
+       <span>Literature</span>
+     </a>  -->
+
+    <a *ngIf="!isAuthenticated" routerLinkActive="active-link" routerLink="/signup">
+      <span><strong>Signup</strong></span>
+    </a>
+
+    <a *ngIf="!isAuthenticated" routerLinkActive="active-link" routerLink="/login">
+      <span><strong>Login</strong></span>
+    </a>
+
+    <a *ngIf="isAuthenticated" (click)="logout()" routerLinkActive="active-link" routerLink="/login">
+      <span><strong>Logout</strong></span>
+    </a>
+    <!-- </span> -->
+
+
+    <!-- </div> -->
+  </nav>
+</div>

@@ -1,0 +1,38 @@
+ 
+
+
+a{
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    padding-right: 30px;
+    }
+  
+   /* .component-container:hover{
+    background-color: rgb(173, 173, 173);*/
+
+   
+
+/* .button:hover{
+    background-color: rgb(55, 42, 42);
+
+} */
+a:hover {
+    color: rgb(68, 255, 51);
+    text-decoration: underline;
+
+    
+  }
+
+  .main-container{
+    background-color: aqua;
+  }
+
+  /* h3{
+    color: azure;
+    background-image: url(/assets/img/sms.jpg);
+
+  } */
+
+  .logo{
+    padding-right: 790px;
+  }

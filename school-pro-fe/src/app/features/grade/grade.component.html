@@ -1,0 +1,184 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(143, 143, 141)">
+    <div class="container-fluid">
+        <h1 style="color:rgb(73, 81, 78) ;">Grades</h1>
+        <div class="d-flex">
+            <button (click)="clickAddGrade()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+                class="btn btn-secondary">AddGrades</button>
+        </div>
+    </div>
+</nav>
+<br>
+ 
+<div class="container-fluid">
+<div class="input-group mb-3">
+  <input type="text" 
+  class="form-control"
+   placeholder="Search by grade" [(ngModel)]="grade" />
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="searchGrade()">
+      Search
+    </button>
+  </div>
+</div>
+ <!-- </div>  -->
+Items per Page:
+<select (change)="handlePageSizeChange($event)">
+  <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+  </option>
+</select>
+<hr>
+<div class="table-responsive-sm">
+  <table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Grade ID</th>
+            <th scope="col"> Student</th>
+            <th scope="col">Subject</th>
+            <th scope="col">Profesor</th>
+            <th scope="col">Grade</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr 
+        *ngFor="let grade of grades | paginate:{
+          itemsPerPage: pageSize,
+          currentPage: page,
+          totalItems: count}; let i=index">
+            <td>{{i+1}}</td>
+            <td>{{grade.id}}</td>
+            <td>{{grade.student}}</td>
+            <td>{{grade.subject}}</td>
+            <td>{{grade.profesor}}</td>
+            <td>{{grade.grade}}</td>
+
+            <td>
+                <button (click)="onEdit(grade)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    class="btn btn-secondary">Edit</button>
+                <button (click)="onDetailsClick(grade,gradeDetailsTemplate )" class="btn btn-success mx-3">Details</button>
+
+                <button (click)="deleteGrade(grade.id)" class="btn btn-danger mx-3">Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Grades</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!--   //////////////////////FORM Add Grades////////////////////////////  -->
+                <form [formGroup]="userForm">
+
+                    <div class="mb-3">
+                        <label>student</label>
+                        <select class="form-control" type="text" id="student" formControlName="student">
+                          <option *ngFor="let student of students$|async" [ngValue]="student.id">
+                            {{student.firstName}} {{student.lastName}}
+                          </option>
+                        </select>
+                      </div>
+          
+
+                      <div class="mb-3">
+                        <label>subject</label>
+                        <select class="form-control" type="text" id="subject" formControlName="subject">
+                          <option *ngFor="let subject of subjects$|async" [ngValue]="subject.id">
+                            {{subject.name}}
+                          </option>
+                        </select>
+                      </div>
+
+                    <div class="mb-3">
+                        <label>profesor</label>
+                        <select class="form-control" type="text" id="profesor" formControlName="profesor">
+                          <option *ngFor="let profesor of profesors$|async" [ngValue]="profesor.id">
+                            {{profesor.firstName}} {{profesor.lastName}}
+                          </option>
+                        </select>
+                      </div>
+
+                  
+                    <div class="mb-3">
+                      <label>Grade</label>
+                      <select type="number" formControlName="grade" class="form-control"
+                        placeholder="Enter grade" (change)="onSelected()">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                      </select>
+                      <!-- <span class="error-msg" *ngIf="userForm.get('currentYearOfStudy')?.errors && userForm.get('currentYearOfStudy')?.touched">CurrentYearOfStudyis Required!</span>  -->
+                      <p class="alert alert-danger" *ngIf="showControlError(userForm,'grade')"> Grade is
+                        requierd!</p>
+          
+                    </div>
+          
+
+
+
+                </form>
+            </div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" *ngIf="showAdd" (click)="postGrade()" [disabled]="userForm.invalid" class="btn btn-primary">Add</button>
+                    <button type="button" *ngIf="showUpdate" (click)="updateGrade()"class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+    
+
+
+
+
+
+
+
+    <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////-->
+ 
+    <ng-template #gradeDetailsTemplate let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Grade details</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+
+      <div class="modal-body">
+          <ul class="list-unstyled">
+            <li>Id: {{ selectedGrade?.id }}</li>
+            <li>Student: {{ selectedGrade?.student }}</li>
+            <li>Subject: {{ selectedGrade?.subject }}</li>
+            <li>Profesor: {{ selectedGrade?.profesor }}</li>
+            <li>Grade: {{ selectedGrade?.grade }}</li> 
+        </ul> 
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+
+    <div class="col-md-12">
+        <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+          (pageChange)="handlePageChange($event)"></pagination-controls>
+      </div>
+    
+</div>
+>
+<app-footer></app-footer>

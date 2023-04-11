@@ -1,0 +1,43 @@
+
+
+
+
+
+<form [formGroup]="signupForm" class="vh-100 d-flex justify-content-center align-items-center"(ngSubmit)="signup()" novalidate>
+    <div class="col-lg-4 col-md-12 col-sm-10 p-1 ">
+      <div class="alert alert-info alert-dismissible fade show" role="alert">
+        You are on signup page! <br>
+        <strong>Signup</strong>
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+        <h2>Signup</h2>
+    
+        <div class="mbb-3">
+          <label for="username">First name</label>
+          <input type="text"  class="form-control" formControlName="name" placeholder="Name" >
+          <p class="alert alert-danger" *ngIf="showControlError(signupForm,'name')" > Name is  Required!!</p>              
+        </div>
+        <div class="mbb-3">
+          <label for="username">Email</label>
+          <input type="text"  class="form-control" formControlName="email" placeholder="Email" >
+          <p class="alert alert-danger" *ngIf="showControlError(signupForm,'email')" > Email is  Required!!</p>              
+        </div>
+    
+        <div class="mb-3">
+          <label for="password">Password</label>
+          <input type="password"  class="form-control" formControlName="password" placeholder="Password">
+          <p class="alert alert-danger" *ngIf="showControlError(signupForm,'password')" > Password is  Required!Last pasword should be less than 7 characters!</p>              
+        </div>
+    
+        <div class="d-flex flex-column ">
+          <button type="submit" class="btn btn-primary" [disabled]="signupForm.invalid"  >Signup</button>
+        </div>
+    
+    
+    
+       </div>
+  </form>  
+  <br>

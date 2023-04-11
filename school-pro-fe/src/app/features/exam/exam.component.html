@@ -1,0 +1,185 @@
+<nav class="navbar navbar-expand-lg"style="background-color: rgb(143, 143, 141)">
+  <div class="container-fluid">
+    <h1 >Exam</h1>
+    <div class="d-flex">
+      <button (click)="clickAddExam()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+        class="btn btn-secondary">AddExam</button>
+    </div>
+  </div>
+</nav>
+<br>
+<div class="container-fluid">
+  <div class="input-group mb-3">
+
+  <input type="text" class="form-control" placeholder="Search by exam" [(ngModel)]="exam" />
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="searchExam()">
+      Search
+    </button>
+  </div>
+</div>
+<hr>
+Items per Page:
+<select (change)="handlePageSizeChange($event)">
+  <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+  </option>
+</select>
+<div class="table-responsive-sm">
+
+ <table class="table table-striped table-bordered">
+  <thead>
+    <tr>
+
+      <th scope="col">#</th>
+      <th scope="col">Exam ID</th>
+      <th scope="col"> Subject</th>
+      <th scope="col"> Profesor</th>
+      <th scope="col"> Student</th>
+      <th scope="col"> Examperiod</th>
+      <th scope="col"> City</th>
+      <th scope="col"> DateOfExam</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let exam of exams | paginate:{
+        itemsPerPage: pageSize,
+        currentPage: page,
+        totalItems: count}; let i=index">
+
+      <td>{{i+1}}</td>
+      <td>{{exam.id}}</td>
+      <td>{{exam.subject}}</td>
+      <td>{{exam.profesor}}</td>
+      <td>{{exam.student}}</td>
+      <td>{{exam.examperiod}}</td>
+      <td>{{exam.city}}</td>
+      <td>{{exam.dateOfExam|date:format}}</td>
+
+      <td>
+        <button (click)="onEdit(exam)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+          class="btn btn-secondary">Edit</button>
+         <button (click)="onDetailsClick(exam,examDetailsTemplate)" class="btn btn-success mx-3">Details</button>
+        <button (click)="deleteExam(exam.id)" class="btn btn-danger mx-3">Delete</button>
+      </td>
+
+    </tr>
+  </tbody>
+</table>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"> School</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <!--   //////////////////////FORM Add Student////////////////////////////  -->
+        <form [formGroup]="userForm">
+
+          <div class="mb-3">
+            <label>subject</label>
+            <select class="form-control" type="text" id="subject" formControlName="subject">
+              <option *ngFor="let subject of subjects$|async" [ngValue]="subject.id">
+                {{subject.name}}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>profesor</label>
+            <select class="form-control" type="text" id="profesor" formControlName="profesor">
+              <option *ngFor="let profesor of profesors$|async" [ngValue]="profesor.id">
+                {{profesor.firstName}} {{profesor.lastName}}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>student</label>
+            <select class="form-control" type="text" id="student" formControlName="student">
+              <option *ngFor="let student of students$|async" [ngValue]="student.id">
+                {{student.firstName}} {{student.lastName}}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>examperiod</label>
+            <select class="form-control" type="text" id="examperiod" formControlName="examperiod">
+              <option *ngFor="let examperiod of examsperiods$|async" [ngValue]="examperiod.id">
+                {{examperiod.startexam}} {{examperiod.finishexam}}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>city</label>
+            <select class="form-control" type="text" id="city" formControlName="city">
+              <option *ngFor="let city of cities$|async" [ngValue]="city.zip_code">
+                {{city.name}}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label>DateOfExam</label>
+            <input type="date" formControlName="dateOfExam" class="form-control">
+            <p class="alert alert-danger" *ngIf="showControlError(userForm,'dateOfExam')"> dateOfExam is requierd!</p>
+
+          </div>
+        </form>
+      </div>
+
+
+      <div class="modal-footer">
+        <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" *ngIf="showAdd" (click)="postExam()" class="btn btn-primary">Add</button>
+        <button type="button" *ngIf="showUpdate" (click)="updateExam()" class="btn btn-primary">Update</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+
+
+
+<!-- ///////////////////////////////////////////////// -->
+
+ 
+
+
+<ng-template #examDetailsTemplate let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Exam details</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+      <ul class="list-unstyled">
+        <li>Id: {{ selectedExam?.id }}</li>
+      <li>Subject: {{ selectedExam?.subject }}</li>
+      <li>Profesor: {{ selectedExam?.profesor}}</li>
+      <li>Student: {{ selectedExam?.student }}</li>
+      <li>Exam-period: {{ selectedExam?.examperiod }}</li>
+      <li>City: {{ selectedExam?.city}}</li>
+      <li>DateOfExam: {{ selectedExam?.dateOfExam|date:format }}</li>
+    </ul> 
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
+
+<div class="col-md-12">
+  <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+    (pageChange)="handlePageChange($event)"></pagination-controls>
+</div>
+ </div> 
+
+ 
+  <app-footer></app-footer>

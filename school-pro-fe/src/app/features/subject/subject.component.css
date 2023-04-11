@@ -1,0 +1,26 @@
+.pagination{
+    float: right; 
+    
+   }
+   
+   input.ng-invalid.ng-touched{
+    border: 1px solid red;
+    
+   }
+   span{
+    color: red;
+   }
+
+   .table:hover{
+    background-color: rgb(173, 173, 173);
+}
+p{
+    color: rgb(110, 16, 173);
+}
+h4{
+    color: rgb(47, 119, 62);
+}
+
+.table{
+    background-color: rgb(245, 238, 159);
+} 

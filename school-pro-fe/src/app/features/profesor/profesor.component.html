@@ -1,0 +1,243 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(143, 143, 141)">
+  <div class="container-fluid">
+    <h1 style="color:rgb(73, 81, 78) ;">Profesor</h1>
+    <div class="d-flex">
+      <button (click)="clickAddProfesor()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+        class="btn btn-secondary">Add
+        Profesor</button>
+    </div>
+  </div>
+</nav>
+<hr>
+<div class="container-fluid">
+<div class="input-group ml-1">
+  <input type="text" class="form-control" placeholder="Search by profesor" [(ngModel)]="profesor" />
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary" type="button" (click)="searchProfesor()">
+      Search
+    </button>
+  </div>
+</div>
+<!-- </div>  -->
+Items per Page:
+<select (change)="handlePageSizeChange($event)">
+  <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+  </option>
+</select>
+<hr>
+<div class="container-fluid">
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Profesor ID</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Adress</th>
+        <th scope="col">City</th>
+        <th scope="col">Phone</th>
+        <th scope="col">ReelectionDate</th>
+        <th scope="col">Title</th>
+        <th scope="col">Subject</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let profesor of profesors | paginate:{
+      itemsPerPage: pageSize,
+      currentPage: page,
+      totalItems: count}; let i=index">
+        <td>{{i+1}}</td>
+        <td>{{profesor.id}}</td>
+        <td>{{profesor.firstName}}</td>
+        <td>{{profesor.lastName}}</td>
+        <td>{{profesor.email}}</td>
+        <td>{{profesor.adress}}</td>
+        <td>{{profesor.city}}</td>
+        <!-- <td>{{ cityMap.get(profesor.city.zip_code)?.name }}</td>   -->
+        <td>{{profesor.phone}}</td>
+        <td>{{profesor.reelectionDate |date:format}}</td>
+        <td>{{profesor.title}}</td>
+        <td>{{profesor.subject}}</td>
+        <td>
+          <button (click)="onEdit(profesor)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            class="btn btn-secondary">Edit</button>
+          <button (click)="onDetailsClick(profesor,profesorDetailsTemplate)"
+            class="btn btn-success mx-3">Details</button>
+          <button (click)="deleteProfesor(profesor.id)" class="btn btn-danger mx-3">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Profesor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <!--   //////////////////////FORM Add Student////////////////////////////  -->
+          <form [formGroup]="userForm">
+
+            <div class="mb-6">
+              <label>First Name</label>
+              <input type="text" formControlName="firstName" class="form-control" placeholder="Enter Name">
+              <!-- <span class="error-msg" *ngIf="userForm.get('firstName')?.errors && userForm.get('firstName')?.touched">First Name is Required!</span> -->
+              <!-- <span class="error-msg" *ngIf="userForm.get('firstName')?.errors?.['minlength']">First Name should be less than 3 characters!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'firstName')"> First Name is Required!Frist
+                Name should be less than 3 characters!</p>
+
+            </div>
+            <div class="mb-1">
+              <label>Last Name</label>
+              <input type="text" formControlName="lastName" class="form-control" placeholder="Enter Last name">
+              <!-- <span class="error-msg" *ngIf="userForm.get('lastName')?.errors && userForm.get('lastName')?.touched">Last Name is Required!</span> -->
+              <!-- <span class="error-msg" *ngIf="userForm.get('lastName')?.errors?.['minlength']">Last Name should be less than 3 characters!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'lastName')"> Last Name is Required!Last
+                Name
+                should be less than 3 characters!</p>
+
+            </div>
+            <div class="mb-1">
+              <label>Email</label>
+              <input type="text" formControlName="email" class="form-control" placeholder="Enter Email">
+              <!-- <span class="error-msg" *ngIf="userForm.get('email')?.errors && userForm.get('email')?.touched">Email is Required!</span> -->
+              <!-- <span class="error-msg" *ngIf="userForm.get('email')?.errors?.['email']">Email must have @!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'email')"> Email is Required!Email must
+                have @!</p>
+
+            </div>
+
+            <div class="mb-1">
+              <label>Adress</label>
+              <input type="text" formControlName="adress" class="form-control" placeholder="Enter Adress">
+              <!-- <span class="error-msg" *ngIf="userForm.get('adress')?.errors && userForm.get('adress')?.touched">Adress is Required!</span> -->
+              <!-- <span class="error-msg" *ngIf="userForm.get('adress')?.errors?.['minlength']">Adress should be less than 3 characters!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'adress')"> Adress is Required!Adress
+                should
+                be less than 3 characters!</p>
+            </div>
+
+
+            <div class="mb-1">
+              <label>city</label>
+              <select class="form-control" type="text" id="city" formControlName="city">
+                <option *ngFor="let city of cities$|async" [ngValue]="city.zip_code">
+                  {{city.name}}{{city.zip_code}}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-1">
+              <label>Phone</label>
+              <input type="phone" formControlName="phone" class="form-control" placeholder="Enter Phone number">
+              <!-- <span class="error-msg" *ngIf="userForm.get('phone')?.errors && userForm.get('phone')?.touched">Phone is  Required!</span> -->
+              <!-- <span class="error-msg" *ngIf="userForm.get('phone')?.errors?.['minlength']">Phone should be less than 9 characters!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'phone')"> Phone is Required!Phone should
+                be
+                less than 9 characters!</p>
+
+            </div>
+            <div class="mb-3">
+              <label>ReelectionDate</label>
+              <input type="date" formControlName="reelectionDate" class="form-control" placeholder="Enter Date">
+              <!-- <span class="error-msg"  *ngIf="userForm.get('reelectionDate')?.errors && userForm.get('reelectionDate')?.touched">ReelectionDate is Required!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'reelectionDate')"> ReelectionDate Name is
+                Required!</p>
+            </div>
+
+            <div class="mb-1">
+              <label>title</label>
+              <select type="string" formControlName="title" class="form-control" id="exampleInputEmail"
+                placeholder="Enter Title" (change)="onSelected()">
+                <option>Rector of the university</option>
+                <option>Dean</option>
+                <option>Vice Dean</option>
+                <option>Profesor</option>
+                <option>Associate Professor</option>
+                <option>Assistant Professor</option>
+                <option>Assistant</option>
+              </select>
+              <!-- <span class="error-msg" *ngIf="userForm.get('title')?.errors && userForm.get('title')?.touched">Title is  Required!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'title')"> Title is Required!</p>
+
+            </div>
+            <div class="mb-3">
+              <label>subject</label>
+              <select class="form-control" type="text" id="subject" formControlName="subject">
+                <option *ngFor="let subject of subjects$|async" [ngValue]="subject.id">
+                  {{subject.name}}
+                </option>
+              </select>
+            </div>
+          </form>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" *ngIf="showAdd" (click)="postProfesor()" [disabled]="userForm.invalid"
+            class="btn btn-primary">Add</button>
+          <button type="button" *ngIf="showUpdate" (click)="updateProfesor()" class="btn btn-primary">Update</button>
+
+        </div>
+      </div>
+    </div>
+    </div>
+  
+
+  <!-- //////////////////////////////////////////////////////////////////////// -->
+
+
+
+
+
+
+ 
+   <ng-template #profesorDetailsTemplate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Profesor details</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+
+
+    <div class="modal-body">
+
+      <ol class="">
+        <li>ID: {{selectedProfesor?.id}}</li>
+        <li> FirstName:{{selectedProfesor?.firstName}}</li>
+        <li> LastName:{{selectedProfesor?.lastName}}</li>
+        <li> Email:{{selectedProfesor?.email}}</li>
+        <li> Adress:{{selectedProfesor?.adress}}</li>
+        <li> City:{{selectedProfesor?.city}}</li>
+        <li> Phone:{{selectedProfesor?.phone}}</li>
+        <li> ReelectionDate:{{selectedProfesor?.reelectionDate|date:format}}</li>
+        <li> Title:{{selectedProfesor?.title}}</li>
+      </ol>
+
+    </div>
+
+
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
+
+  <div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)"></pagination-controls>
+  </div>
+  </div>
+  
+
+ >
+<app-footer></app-footer>  

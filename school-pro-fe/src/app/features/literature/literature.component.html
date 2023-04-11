@@ -1,0 +1,177 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(143, 143, 141)">
+    <div class="container-fluid">
+      <h1 style="color:rgb(73, 81, 78) ;">Literature</h1>
+      <div class="d-flex">
+        <button (click)="clickAddLiterature()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+          class="btn btn-secondary">AddLiterature</button>
+      </div>
+    </div>
+  </nav>
+  <br> 
+  <div class="container-fluid">
+   <div class="input-group mb-3">
+    <input
+      type="text"
+       class="form-control"
+      placeholder="Search by literature"
+      [(ngModel)]="literature" /> 
+    <div class="input-group-append">
+      <button
+        class="btn btn-outline-secondary"
+        type="button"
+        (click)="searchLiterature()">
+        Search
+      </button>
+    </div>
+  </div>
+  <hr>
+  <!-- </div>  -->
+  Items per Page:
+  <select (change)="handlePageSizeChange($event)">
+  <option *ngFor="let size of pageSizes" [ngValue]="size">
+    {{ size }}
+  </option>
+  </select>
+  <div class="container-fluid">
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Literature ID</th>
+        <th scope="col"> Name</th>
+        <th scope="col">Author</th>
+        <th scope="col">Profesor</th>
+        <th scope="col">ISSN</th>
+        <th scope="col">PDF</th>
+   
+       </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="let literature of literature | paginate:{
+          itemsPerPage: pageSize,
+          currentPage: page,
+          totalItems: count}; let i=index">
+        <td>{{i+1}}</td>
+        <td>{{literature.id}}</td>
+        <td>{{literature.name}}</td>
+        <td>{{literature.author}}</td>
+        <td>{{literature.profesor}}</td>
+        <td>{{literature.issn}}</td>
+        <td>{{literature.pdf}}</td>
+        <td>
+            <button type="submit" class="btn btn-outline-primary" (click)="downloadPdf('fileName')">Download
+                PDF</button>
+        </td>
+        <td>
+          <button (click)="onEdit(literature)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            class="btn btn-secondary">Edit</button>
+          <!-- <button (click)="onDetailsClick(literature,literatureDetailsTemplate)" class="btn btn-success mx-3">Details</button> -->
+  
+          <button (click)="deleteLiterature(literature.id)" class="btn btn-danger mx-3">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Literatrue</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+  
+           <form [formGroup]="userForm">
+
+            <div class="mb-3">
+              <input type="text" formControlName="name" class="form-control" placeholder="Enter Name">            
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'name')"> Name is requierd! Name should be
+                less than 3 characters! </p>
+             </div>
+  
+            <div class="mb-3">
+              <label>Author</label>
+              <input type="text" formControlName="author" class="form-control" placeholder="Enter Author">
+               <p class="alert alert-danger" *ngIf="showControlError(userForm,'description')"> Author is requierd!</p>
+             </div>
+
+            
+          <div class="mb-3">
+            <label>profesor</label>
+            <select class="form-control" type="text" id="profesor" formControlName="profesor">
+              <option *ngFor="let profesor of profesors$|async" [ngValue]="profesor.id">
+                {{profesor.firstName}} {{profesor.lastName}}
+              </option>
+            </select>
+          </div>
+  
+            <div class="mb-3">
+              <label>ISSN</label>
+              <input type="number" formControlName="issn" class="form-control" placeholder="Enter ISSN">
+               <p class="alert alert-danger" *ngIf="showControlError(userForm,'noOfESP')"> ISSN is requierd!</p>
+             </div>
+             
+             <div class="mb-3">
+                <label>Pdf</label>
+                <input type="fil" formControlName="pdf" class="form-control" placeholder="pdf">
+                </div>
+            <!-- </div> -->
+            </form>
+  
+        </div>
+  
+          <div class="modal-footer">
+            <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" *ngIf="showAdd" (click)="postLiterature()" [disabled]="userForm.invalid"
+              class="btn btn-primary">Add</button>
+            <button type="button" *ngIf="showUpdate" (click)="updateLiterature()" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </div>
+      </div>
+    
+  
+  
+  
+  
+  
+  <!-- ///////////////////////////////////////////////////////////////// -->
+   
+  
+  
+   <ng-template #literatureDetailsTemplate let-modal>
+      <div class="modal-header">
+          <h4 class="modal-title">Literature details</h4>
+          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+          
+      <ol >
+        <li>ID: {{selectedLiterature?.id}}</li>
+        <li> Name:{{selectedLiterature?.name}}</li>
+        <li>  Author:{{selectedLiterature?.author}}</li>
+        <li> Profesor:{{selectedLiterature?.profesor}}</li>
+        <li>  ISSN:{{selectedLiterature?.issn}}</li>
+        <li>  PDF:{{selectedLiterature?.pdf}}</li>
+           </ol>
+  
+      </div>
+      <div class="modal-footer">
+          <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+  </ng-template> 
+  
+  
+  
+  
+  
+  <div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)"></pagination-controls>
+  
+  </div>
+    </div>
+     <app-footer></app-footer>

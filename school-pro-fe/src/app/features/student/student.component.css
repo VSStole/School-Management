@@ -1,0 +1,19 @@
+ 
+   
+   input.ng-invalid.ng-touched{
+       border: 1px solid red;
+       
+   }
+    
+      .error-msg{
+        color: red;
+        
+      }
+
+      .table{
+        background-color: rgb(245, 238, 159);
+    } 
+
+    h4{
+      color: rgb(47, 119, 62);
+  }

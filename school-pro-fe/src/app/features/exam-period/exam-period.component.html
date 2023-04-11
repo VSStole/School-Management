@@ -1,0 +1,157 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(143, 143, 141)">
+    <div class="container-fluid">
+      <h1 style="color:rgb(73, 81, 78) ;">Exam-period</h1>
+      <div class="d-flex">
+        <button (click)="clickAddExamperiod()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+        class="btn btn-secondary ">AddExamperiod</button>
+      </div>
+    </div>
+  </nav>
+  <br>
+  <div class="container-fluid">
+
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search by exam" [(ngModel)]="examperiod" />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" (click)="searchExamperiod()">
+        Search
+      </button>
+    </div>
+  </div>
+  <hr>
+   Items per Page:
+  <select (change)="handlePageSizeChange($event)">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+      {{ size }}
+    </option>
+  </select>  
+
+  <div class="container-fluid">  
+  <table class="table table-striped">
+    <thead>
+      <tr>
+  
+        <th scope="col">#</th>
+        <th scope="col">Examperiod ID</th>
+        <th scope="col"> Name</th>
+        <th scope="col"> Startexam</th>
+        <th scope="col"> Finish-exam</th>
+        <th scope="col"> Quarter</th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr *ngFor="let examperiod of examsperiods | paginate:{
+        itemsPerPage: pageSize,
+        currentPage: page,
+        totalItems: count}; let i=index">
+  
+        <td>{{i+1}}</td>
+        <td>{{examperiod.id}}</td>
+        <td>{{examperiod.name}}</td>
+        <td>{{examperiod.startexam|date:format}}</td>
+        <td>{{examperiod.finishexam|date:format}}</td>
+        <td>{{examperiod.quarter}}</td>
+  
+        <td>
+          <button (click)="onEdit(examperiod)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            class="btn btn-secondary">Edit</button>
+           <button (click)="onDetailsClick(examperiod,examperiodDetailsTemplate)" class="btn btn-success mx-3">Details</button>
+          <button (click)="deleteExamperiod(examperiod.id)" class="btn btn-danger mx-3">Delete</button>
+        </td>
+  
+      </tr>
+    </tbody>
+  </table>
+</div>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel"> School</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+  
+          <!--   //////////////////////FORM Add Student////////////////////////////  -->
+          <form [formGroup]="userForm"> 
+     
+            <div class="mb-3">
+              <label>Name</label>
+              <input type="text" formControlName="name" class="form-control">
+              <!-- <span class="error-msg" *ngIf="userForm.get('name')?.errors && userForm.get('name')?.touched"> Name is Required!</span> -->
+              <p class="alert alert-danger" *ngIf="showControlError(userForm,'name')"> Name is requierd!</p>
+              <!-- <p class="alert alert-danger" *ngIf="showControlError(userForm,'indexNumber')" > IndexNumber is  Required! indexNumber min/max 4characters!</p> -->
+
+             </div>
+
+            <div class="mb-3">
+              <label>Startexam</label>
+              <input type="date" formControlName="startexam" class="form-control">
+               <p class="alert alert-danger" *ngIf="showControlError(userForm,'startexam')">Start-exam is requierd!</p>
+            </div>
+
+
+            <div class="mb-3">
+              <label>Finish-exam</label>
+              <input type="date" formControlName="finishexam" class="form-control">
+               <p class="alert alert-danger" *ngIf="showControlError(userForm,'finishexam')">Finish-exam is requierd!</p>
+            </div>
+
+            <div class="mb-3">
+              <label>Quarter</label>
+               <select type="text" formControlName="quarter" class="form-control" placeholder="quarter"
+                (change)="onSelected()">
+                <option>Winter</option>
+                <option>Spring</option>
+                <option>Summer</option>
+                <option>Autumn</option>
+              </select>
+               <p class="alert alert-danger" *ngIf="showControlError(userForm,'quarter')"> Quarter is requierd!</p>
+            </div>
+            </form> 
+        </div>
+  
+      
+        <div class="modal-footer">
+          <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" *ngIf="showAdd" (click)="postExamperiod()" class="btn btn-primary text-center">Add</button>
+          <button type="button" *ngIf="showUpdate" (click)="updateExamperiod()" class="btn btn-primary">Update</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  
+  
+  
+  
+  
+  <!-- ///////////////////////////////////////////////// -->
+ 
+  <ng-template #examperiodDetailsTemplate let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Exam-period details</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <ul class="list-unstyled">
+          <li>Id: {{ selectedExamperiod?.id }}</li>
+          <li>Name: {{ selectedExamperiod?.name }}</li>
+          <li>Startexam: {{ selectedExamperiod?.startexam|date:format }}</li>
+          <li>Finishexam: {{ selectedExamperiod?.finishexam|date:format }}</li>
+          <li>Quarter: {{ selectedExamperiod?.quarter }}</li>
+      </ul> 
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+  </ng-template>
+  
+    <div class="col-md-12">
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)"></pagination-controls>
+   </div> 
+  </div>
+  
+<app-footer></app-footer>

@@ -1,0 +1,262 @@
+<nav class="navbar navbar-expand-lg" style="background-color: rgb(143, 143, 141)">
+
+  <div class="container-fluid">
+    <h1 style="color:rgb(73, 81, 78) ;">Student</h1>
+    <div class="d-flex">
+      <button (click)="clickAddStudent()" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" data
+        class="btn btn-secondary">Add
+        Student</button>
+    </div>
+
+  </div>
+</nav>
+
+<!-- <div class="alert alert-success alert-dismissible fade show" role="alert">
+  <strong>Heloo Students</strong> You should check in on some of those fields below.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div> -->
+<br>
+<div class="container-fluid">
+  <div class="input-group mb-3">
+    <input type="text" class="form-control" placeholder="Search by student" [(ngModel)]="student" />
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" (click)="searchStudent()">
+        Search
+      </button>
+    </div>
+  </div>
+  <hr>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>Heloo Students</strong> You should check in on some of those fields below.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- </div>  -->
+  Items per Page:
+  <select (change)="handlePageSizeChange($event)">
+    <option *ngFor="let size of pageSizes" [ngValue]="size">
+      {{ size }}
+    </option>
+  </select>
+
+    <div class="table-responsive-sm">
+
+      <table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Student ID</th>
+            <th scope="col">Index Number</th>
+            <th scope="col">Index Year</th>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Adress</th>
+            <th scope="col">City</th>
+            <th scope="col">Current Year Of Study</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let student of students | paginate:{
+      itemsPerPage: pageSize,
+      currentPage: page,
+      totalItems: count}; let i=index">
+            <th>{{i+1}}</th>
+            <th>{{student.id}}</th>
+            <td>{{student.indexNumber}}</td>
+            <td>{{student.indexYear}}</td>
+            <td>{{student.firstName}}</td>
+            <td>{{student.lastName}}</td>
+            <td>{{student.email}}</td>
+            <td>{{student.adress}}</td>
+            <td>{{student.city}}</td>
+            <td>{{student.currentYearOfStudy}}</td>
+
+            <td>
+              <button (click)="onEdit(student)" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                class="btn btn-secondary">Edit</button>
+              <button (click)="onDetailsClick(student,studentDetailsTemplate)" type="button"
+                data-bs-target="#exampleModal" class="btn btn-success mx-3">Details</button>
+
+              <button (click)="deleteStudent(student.id)" class="btn btn-danger mx-3">Delete</button>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+
+          <div class="modal-body">
+
+            <form [formGroup]="userForm">
+              <div class="mb-3">
+                <label>indexNumber</label>
+                <input type="number" formControlName="indexNumber" class="form-control"
+                  placeholder="Enter Index number">
+                <!-- <span class="error-msg" *ngIf="userForm.get('indexNumber')?.errors && userForm.get('indexNumber')?.touched">index Number is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('indexNumber')?.errors?.['minlength']">Index Number min/max 4characters!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'indexNumber')"> IndexNumber is Required!
+                  indexNumber min/max 4characters!</p>
+
+              </div>
+
+              <div class="mb-3">
+                <label>indexYear</label>
+                <input type="number" formControlName="indexYear" class="form-control" placeholder="Enter Index year">
+                <!-- <span class="error-msg" *ngIf="userForm.get('indexYear')?.errors && userForm.get('indexYear')?.touched">index Year is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('indexYear')?.errors?.['minlength']">indexYear should be min2000  max2100!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'indexYear')">IndexYear is Required!
+                  IndexYear should be min2000 max2100!</p>
+
+              </div>
+
+              <div class="mb-3">
+                <label>firstName</label>
+                <input type="text" formControlName="firstName" class="form-control" placeholder="Enter name">
+                <!-- <span class="error-msg" *ngIf="userForm.get('firstName')?.errors && userForm.get('firstName')?.touched">Frist Name is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('firstName')?.errors?.['minlength']">Frist Name should be lessthan 3 characters!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'firstName')"> First Name is
+                  Required!Frist
+                  Name should be less than 3 characters!</p>
+              </div>
+
+              <div class="mb-3">
+                <label>lastName</label>
+                <input type="text" formControlName="lastName" class="form-control" placeholder="Enter Lastname">
+                <!-- <span class="error-msg" *ngIf="userForm.get('lastName')?.errors && userForm.get('lastName')?.touched">Last Name is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('lastName')?.errors?.['minlength']">Last Name should be less than 3 characters!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'lastName')"> Last Name is Required!Last
+                  Name
+                  should be less than 3 characters!</p>
+
+              </div>
+              <div class="mb-3">
+                <label>email</label>
+                <input type="text" formControlName="email" class="form-control" placeholder="Enter Email">
+                <!-- <span class="error-msg" *ngIf="userForm.get('email')?.errors && userForm.get('email')?.touched">Email Name  is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('email')?.errors?.['email']">Email must have @!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'email')"> Email is Required! Email must
+                  have
+                  @! </p>
+
+              </div>
+              <div class="mb-3">
+                <label>adress</label>
+                <input type="text" formControlName="adress" class="form-control" placeholder="Enter Adress">
+                <!-- <span class="error-msg" *ngIf="userForm.get('adress')?.errors && userForm.get('adress')?.touched">Address is Required!</span> -->
+                <!-- <span class="error-msg" *ngIf="userForm.get('adress')?.errors?.['minlength']">Addres should be less than 3characters!</span> -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'adress')">Adress is Required! Adress
+                  should
+                  be less then 3 characters! </p>
+              </div>
+
+         
+
+              <div class="mb-3">
+                <label>city</label>
+                <select class="form-control" type="text" id="city" formControlName="city">
+                  <option *ngFor="let city of cities$|async" [ngValue]="city.zip_code">
+                    {{city.name}}
+                  </option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label>currentYearOfStudy</label>
+                <select type="text" formControlName="currentYearOfStudy" class="form-control"
+                  placeholder="Enter Current year Of study" (change)="onSelected()">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                </select>
+                <!-- <span class="error-msg" *ngIf="userForm.get('currentYearOfStudy')?.errors && userForm.get('currentYearOfStudy')?.touched">CurrentYearOfStudyis Required!</span>  -->
+                <p class="alert alert-danger" *ngIf="showControlError(userForm,'currentYearOfStudy')">
+                  CurrentYearOfStudy is
+                  requierd!</p>
+
+              </div>
+
+
+
+            </form>
+
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="cancel" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" *ngIf="showAdd" (click)="postStudent()" [disabled]="userForm.invalid"
+              class="btn btn-primary">Add</button>
+            <button type="button" *ngIf="showUpdate" (click)="updateStudent()" class="btn btn-primary">Update</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+
+    <!-- /////////////////////// -->
+
+
+
+ 
+
+    <ng-template #studentDetailsTemplate let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Student details</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+
+        <ol class="">
+
+          <li>ID: {{selectedStudent?.id}}</li>
+          <li> IndexNumber:{{selectedStudent?.indexNumber}}</li>
+          <li> IndexYear:{{selectedStudent?.indexYear}}</li>
+          <li> FirstName:{{selectedStudent?.firstName}}</li>
+          <li> LastName:{{selectedStudent?.lastName}}</li>
+          <li> Email:{{selectedStudent?.email}}</li>
+          <li> Adress:{{selectedStudent?.adress}}</li>
+          <li> City:{{selectedStudent?.city}}</li>
+          <li> CurrentYearOfStudy:{{selectedStudent?.currentYearOfStudy}}</li>
+        </ol>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+
+
+    <div class="col-md-12">
+      <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+        (pageChange)="handlePageChange($event)"></pagination-controls>
+
+    </div>
+  </div><hr>
+
+
+
+  <app-footer></app-footer>

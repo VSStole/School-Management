@@ -1,0 +1,25 @@
+/* A CSS class that is used to float the pagination to the right. */
+/* .pagination{
+    float: right;
+   } */
+   input.ng-invalid.ng-touched{
+    border: 1px solid red;
+    
+   }
+   .error-msg{
+    color: red;
+   }
+
+    /* .component-container:hover{
+    background-color: rgb(173, 173, 173);
+} */
+.table{
+    background-color: rgb(255, 243, 243);
+}
+
+p{
+    color: blueviolet;
+}
+h4{
+    color: rgb(47, 119, 62);
+}
